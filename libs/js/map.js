@@ -61,12 +61,12 @@ function returnCountryInformation() {
                 country: $('#countryInput').val(),
             },
             success: (result) => {
-                map.setView([result['data'][0][0]['latlng']]);
-                L.marker([result['data'][0]['latlng']]).addTo(map).bindPopup(`<b>${result['data'][0]['name']}!</b><br>
+                map.setView([result['data'][0]['latlng'][0], result['data'][0]['latlng'][1]]);
+                L.marker([result['data'][0]['latlng'][0], result['data'][0]['latlng'][1]]).addTo(map).bindPopup(`<b>${result['data'][0]['name']}!</b><br>
                 Capital: ${result['data'][0]['capital']}<br>
                 Region: ${result['data'][0]['region']}<br>
                 Population: ${result['data'][0]['population']}<br>
-                Currency: ${result['data'][0]['currencies']['name']}<br>
+                Currency: ${result['data'][0]['currencies'][0]['name']}<br>
                 `).openPopup();
 
             }

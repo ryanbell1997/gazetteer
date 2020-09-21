@@ -16,7 +16,7 @@ $decode = json_decode($result,true);
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "data acquired";
-$output['data'] = $decode['results'];
+$output['data'] = $decode;
 
 header('Content-Type: application/json; charset=UTF-8');
 
