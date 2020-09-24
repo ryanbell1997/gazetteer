@@ -1,24 +1,20 @@
 var map = L.map('map').setView([51.505, -0.09], 13);
 
-L.tileLayer('https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=2e011da1ea684120b8c6bf9fa2df5a98', {
-	attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	apikey: '2e011da1ea684120b8c6bf9fa2df5a98',
-	maxZoom: 22
-},
-).addTo(map);
-
-function setLJSON(storageName,item) {
-    localStorage.setItem(storageName, JSON.stringify(item));
+function main(){
+    L.tileLayer('https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=2e011da1ea684120b8c6bf9fa2df5a98', {
+        attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        apikey: '2e011da1ea684120b8c6bf9fa2df5a98',
+        maxZoom: 22
+    },
+    ).addTo(map);
+    getInitialLocation();
 }
 
-function getLJSON(item) {
-    return JSON.parse(localStorage.getItem(item));
-}
 
-function setView(lat, lang, zoom=6){
-    map.setView([lat, lang]);
-    map.setZoom(zoom);
-}
+
+
+
+
 
 function getInitialLocation(){
     if(!getLJSON('initialLocation') || !getLJSON('initialLocation')){
@@ -26,7 +22,7 @@ function getInitialLocation(){
             navigator.geolocation.getCurrentPosition((position) => {
                 $(document).ready(() => {
                     $.ajax({
-                        url: './libs/php/getCountry.php',
+                        url: '../libs/php/getCountry.php',
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -35,13 +31,13 @@ function getInitialLocation(){
                         },
                         success: (result) => {
                             if(result.status.name == "ok"){
-                                const currentCountryName = result['data']['results'][0]['components']['country'];
-                                const currentLatLng = [position.coords.latitude, position.coords.longitude];
-                                setView(position.coords.latitude, position.coords.longitude);
-                                L.marker([position.coords.latitude, position.coords.longitude]).addTo(map).bindPopup(`<b>${currentCountryName}</b><br>`).openPopup();
+                                const currentCountryName = result['data'][0]['name'];
+                                const currentLatLng = [['data'][0]['latlng'][0], result['data'][0]['latlng'][1]];
+                                setView(result['data'][0]['latlng'][0], result['data'][0]['latlng'][1]);
+                                L.marker([result['data'][0]['latlng'][0], result['data'][0]['latlng'][1]]).addTo(map).bindPopup(`<b>${currentCountryName}</b><br>`).openPopup();
                                 setLJSON('initialLocation', currentCountryName);
                                 setLJSON('initialCoords', currentLatLng);
-                                setLJSON('initialCountry', currentCountryName);
+                                setLJSON('initialCountry', currentCountryName); 
                             }
                         }, error: (jqXHR, textStatus, errorThrown) => {
                             alert("Get Country Failed");
@@ -85,9 +81,19 @@ function displayCountryInformation() {
     })
 }
 
-$(document).ready(() => {
-    getInitialLocation();
-})
+function setLJSON(storageName,item) {
+    localStorage.setItem(storageName, JSON.stringify(item));
+}
+
+function getLJSON(item) {
+    return JSON.parse(localStorage.getItem(item));
+}
+
+
+function setView(lat, lang, zoom=6){
+    map.setView([lat, lang]);
+    map.setZoom(zoom);
+}
 
 $('#countrySearch').on('submit', () => {
     displayCountryInformation();
@@ -104,3 +110,8 @@ $('#countryInput').on('keyup', (e) => {
     }
 })
 */
+
+$(document).ready(() => {
+    main();
+    
+})

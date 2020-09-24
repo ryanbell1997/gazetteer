@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    $.getJSON('../geoJson/countries_small.geo.json',
+    $.getJSON('countries_small.geo.json',
         function(data) {
             var result = [];
             data.forEach(element => {
