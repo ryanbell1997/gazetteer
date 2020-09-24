@@ -15,6 +15,11 @@ function getLJSON(item) {
     return JSON.parse(localStorage.getItem(item));
 }
 
+function setView(lat, lang, zoom=6){
+    map.setView([lat, lang]);
+    map.setZoom(zoom);
+}
+
 function getInitialLocation(){
     if(!getLJSON('initialLocation') || !getLJSON('initialLocation')){
         if('geolocation' in navigator){
@@ -32,8 +37,7 @@ function getInitialLocation(){
                             if(result.status.name == "ok"){
                                 const currentCountryName = result['data']['results'][0]['components']['country'];
                                 const currentLatLng = [position.coords.latitude, position.coords.longitude];
-                                map.setView([position.coords.latitude, position.coords.longitude]);
-                                map.setZoom(6);
+                                setView(position.coords.latitude, position.coords.longitude);
                                 L.marker([position.coords.latitude, position.coords.longitude]).addTo(map).bindPopup(`<b>${currentCountryName}</b><br>`).openPopup();
                                 setLJSON('initialLocation', currentCountryName);
                                 setLJSON('initialCoords', currentLatLng);
@@ -50,13 +54,12 @@ function getInitialLocation(){
         }
     } else {
         var coords = getLJSON('initialCoords');
-        map.setView([coords[0], coords[1]]);
-        map.setZoom(6)
-        L.marker([coords[0], coords[1]]).addTo(map).bindPopup(`<b>${getLJSON('initialCountry')}!</b><br>`).openPopup();
+        setView(coords[0], coords[1]);
+        L.marker([coords[0], coords[1]]).addTo(map).bindPopup(`<b>${getLJSON('initialCountry')}</b><br>`).openPopup();
     }     
 }
 
-function returnCountryInformation() {
+function displayCountryInformation() {
     $(document).ready(() => {
         $.ajax({
             url: './libs/php/searchProcessor.php',
@@ -81,25 +84,23 @@ function returnCountryInformation() {
         })
     })
 }
-/*
-$(document).ready(() => {
-    getInitialLocation();
-})
-*/
 
 $(document).ready(() => {
     getInitialLocation();
 })
 
-$('#countrySearch').on('click', () => {
-    returnCountryInformation();
-}) 
+$('#countrySearch').on('submit', () => {
+    displayCountryInformation();
+})
+
+$('#countryInput').on('submit', () => {
+    displayCountryInformation();
+})
 //Get enter press working in order to search.
+/*
 $('#countryInput').on('keyup', (e) => {
     if(e.which == 13) {
         returnCountryInformation();
     }
 })
-
-
-
+*/

@@ -27,3 +27,11 @@ h1 {
 .fixed-top {
     min-height: 56px;
 }
+
+.form-control {
+    width: 50%;
+}
+
+.form {
+    justify-content: flex-end;
+}
