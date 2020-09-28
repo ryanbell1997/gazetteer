@@ -7,8 +7,19 @@ function main(){
         maxZoom: 22
     },
     ).addTo(map);
+    //Overall Information Button
+    L.easyButton('<span>&starf;</span>', () => {alert('Hello');}).addTo(map);
+    
     getInitialLocation();
 }
+
+//Country Information
+let countryName = '';
+let population = '';
+let region = '';
+let capital = '';
+let landMass = 0;
+
 
 function getInitialLocation(){
     if(!getLJSON('initialLocation') || !getLJSON('initialLocation')){
