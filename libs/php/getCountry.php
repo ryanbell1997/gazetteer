@@ -1,12 +1,13 @@
 <?php
 
     ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
+    error_reporting(E_ALL);
+    
+    include('../../openCage/AbstractGeocoder.php');
+	include('../../openCage/Geocoder.php');
 
     $output = [];
     $countryCode = '';
-
-
 
     /*Gets Country Code using GeoNames */
     $countryCodeUrl = 'api.geonames.org/countryCodeJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=ryan.bell1997';
@@ -50,6 +51,12 @@
     
     $output['CountryInfo'] = $countryInfoDecode;
 
+    /*Gets country lat/lng with openCage SDK*/
+    $geocoder = new \OpenCage\Geocoder\Geocoder('a32b5f964b3443258ab53e866c1c80d6');
+
+    $openCageResult = $geocoder->geocode($countryInfoDecode['geonames'][0]['countryName'], ['countrycode' => $countryCode]);
+    
+    $output['openCage'] = $openCageResult;
 
 
     /*Gets currency info from OpenExchange using currency from Geoname*/
@@ -107,16 +114,13 @@
     
     $venueDecode = json_decode($venueResult,true);
 
-    $output['venues'] = $venueDecode;
+    $output['Venues'] = $venueDecode;
 
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
     $output['status']['description'] = "Information acquired";
 
-    header('Content-Type: application/json; charset=UTF-8');
+    header('Content-Type:application/json; charset=UTF-8');
     
     echo json_encode($output);
 ?>
-
-//Store all in a variable at the top. Single function. 
-//Store the country code in a variable.

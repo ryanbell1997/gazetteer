@@ -22,8 +22,8 @@
   <body>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <h1>Gazetteer</h1>
-        <form class="form-inline my-2 my-lg-0 form-float">
+      <h1 id="titleH">Gazetteer</h1>
+        <form class="form-inline my-2 my-lg-0 form-float" id="form">
           <select class="form-control mr-sm-2" type="text" placeholder="Search for a country" aria-label="Search" id="countryInput" name="countryInput" placeholder="Select A Country">
             <option value="AFG">Afghanistan</option>
             <option value="AGO">Angola</option>
@@ -207,11 +207,9 @@
           </select>
     </form>
 </nav>
-
   <div id="container">
     <div id="map"></div>
   </div>
-
 <footer>
     <p>This page was created by Ryan Bell</p>
 </footer>
@@ -220,5 +218,4 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="libs/js/map.js"></script>
-<script src="libs/js/countries.js"></script>
 </html>
