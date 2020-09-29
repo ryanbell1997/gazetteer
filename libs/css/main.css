@@ -35,3 +35,8 @@ h1 {
 .form {
     justify-content: flex-end;
 }
+
+#countryInput {
+    display: inline-block;
+    float: right;
+}
