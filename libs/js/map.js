@@ -19,15 +19,21 @@ let region = '';
 let capital = '';
 let landMass = 0;
 let exchangeRate = 0;
-let latitude = 0;
-let longitude = 0;
+let countryGeoJson = [];
 
+var geoJsonStyle = {
+    "color": "#85e384",
+    "opacity": 0.8,
+    "weight": 2,
+}
+
+var geoJsonLayer = [];
 
 function getInitialLocation(){
         if('geolocation' in navigator){
             navigator.geolocation.getCurrentPosition((position) => {
                 $.ajax({
-                    url: '../../../gazetteer/libs/php/getCountry.php',
+                    url: 'libs/php/getCountry.php',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -46,10 +52,11 @@ function getInitialLocation(){
                             currency = result['CountryInfo']['geonames'][0]['currencyCode'];
                             exchangeRate = result['CurrencyInfo']['rates'][currency];
                             countryCode = result['CountryCode']['countryCode'];
-                            latitude = result['openCage']['results'][0]['geometry']['lat'];
-                            longitude = result['openCage']['results'][0]['geometry']['lng'];
-                            setView(latitude, longitude);
-                            L.marker([latitude, longitude]).addTo(map).bindPopup(mapInfoDisplay()).openPopup();
+                            countryGeoJson =  result['geoJson'];
+                            createGeoJson(countryGeoJson);
+                            setView(countryGeoJson);
+                            geoJsonLayer.bindTooltip(mapInfoDisplay()).toggleTooltip();
+
                         }
                     },
                     error: (jqXHR, textStatus, errorThrown) => {
@@ -69,10 +76,17 @@ function getLJSON(item) {
     return JSON.parse(localStorage.getItem(item));
 }
 
-function setView(lat, lang, zoom=6){
-    map.setView([lat, lang]);
-    map.setZoom(zoom);
+function setView(){
+    map.fitBounds(geoJsonLayer.getBounds());
 }
+
+function createGeoJson(geoJson) {
+    geoJsonLayer = L.geoJson(geoJson, {
+        style: geoJsonStyle
+    }).addTo(map);
+}
+
+
 
 function mapInfoDisplay(){
     return `<b>${countryName}</b><br>

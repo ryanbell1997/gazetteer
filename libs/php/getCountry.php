@@ -4,10 +4,11 @@
     error_reporting(E_ALL);
     
     include('../../openCage/AbstractGeocoder.php');
-	include('../../openCage/Geocoder.php');
+    include('../../openCage/Geocoder.php');
 
     $output = [];
     $countryCode = '';
+    $countryIsoAlpha3 = '';
 
     /*Gets Country Code using GeoNames */
     $countryCodeUrl = 'api.geonames.org/countryCodeJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=ryan.bell1997';
@@ -30,6 +31,7 @@
     $output['CountryCode'] = $countryCodeResult;
     
     $countryCode = $countryCodeResult['countryCode'];
+    
 
     
 
@@ -48,16 +50,19 @@
         curl_close($ch);
 
     $countryInfoDecode = json_decode($countryInfoResult, true);
+    $countryIsoAlpha3 = $countryInfoDecode['geonames'][0]['isoAlpha3'];
     
     $output['CountryInfo'] = $countryInfoDecode;
+    
 
     /*Gets country lat/lng with openCage SDK*/
+    /*
     $geocoder = new \OpenCage\Geocoder\Geocoder('a32b5f964b3443258ab53e866c1c80d6');
 
     $openCageResult = $geocoder->geocode($countryInfoDecode['geonames'][0]['countryName'], ['countrycode' => $countryCode]);
     
     $output['openCage'] = $openCageResult;
-
+    */
 
     /*Gets currency info from OpenExchange using currency from Geoname*/
     /*Currently, this api converts the SEARCHED country currency against USD.*/
@@ -115,6 +120,24 @@
     $venueDecode = json_decode($venueResult,true);
 
     $output['Venues'] = $venueDecode;
+
+    /*Getting the geoJson for the country*/
+    $geoJsonString = file_get_contents("../geoJson/countries_small.geo.json");
+
+    $geoJsonDecode = json_decode($geoJsonString,true);
+    $geoJsonCountries = $geoJsonDecode['features'];
+    $countryGeoJson = '';
+
+    foreach($geoJsonCountries as $country){
+        if($country['id'] == $countryIsoAlpha3){
+            $countryGeoJson = $country['geometry'];
+        break;
+        }
+    }
+
+
+    $output['geoJson'] = $countryGeoJson;
+
 
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
