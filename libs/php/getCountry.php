@@ -2,9 +2,6 @@
 
     ini_set('display_errors', 'On');
     error_reporting(E_ALL);
-    
-    include('../../openCage/AbstractGeocoder.php');
-    include('../../openCage/Geocoder.php');
 
     $output = [];
     $countryCode = '';
@@ -53,18 +50,7 @@
     $countryIsoAlpha3 = $countryInfoDecode['geonames'][0]['isoAlpha3'];
     
     $output['CountryInfo'] = $countryInfoDecode;
-    
 
-    /*Gets country lat/lng with openCage SDK*/
-    /*
-    $geocoder = new \OpenCage\Geocoder\Geocoder('a32b5f964b3443258ab53e866c1c80d6');
-
-    $openCageResult = $geocoder->geocode($countryInfoDecode['geonames'][0]['countryName'], ['countrycode' => $countryCode]);
-    
-    $output['openCage'] = $openCageResult;
-    */
-
-    /*Gets currency info from OpenExchange using currency from Geoname*/
     /*Currently, this api converts the SEARCHED country currency against USD.*/
     $currencyInfoURL = 'https://openexchangerates.org/api/latest.json?app_id=8a4a1acc06324d2c85810578f283d2ad&symbols=' . $countryInfoDecode['geonames'][0]['currencyCode'] . '&prettyprint=false';
 
@@ -134,7 +120,6 @@
         break;
         }
     }
-
 
     $output['geoJson'] = $countryGeoJson;
 
