@@ -6,9 +6,11 @@
     $output = [];
     $countryCode = '';
     $countryIsoAlpha3 = '';
+    $userCurrency = $_REQUEST['currency'];
 
     /*Gets Country Code using GeoNames */
-    $countryCodeUrl = 'api.geonames.org/countryCodeJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=ryan.bell1997';
+    if(isset($_REQUEST['lat']) && isset($_REQUEST['lng'])){
+        $countryCodeUrl = 'api.geonames.org/countryCodeJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=ryan.bell1997';
 
         $ch = curl_init();
 
@@ -22,14 +24,15 @@
 
         $countryCodeResult = json_decode($countryCodeResponse, true);
 
+        $countryCode = $countryCodeResult['countryCode'];
+
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
     $output['status']['description'] = "Country Code acquired";
     $output['CountryCode'] = $countryCodeResult;
-    
-    $countryCode = $countryCodeResult['countryCode'];
-    
-
+    } else {
+        $countryCode = $_REQUEST['countryCode'];
+    }
     
 
     /*Gets country info from Geonames using country code*/
@@ -48,11 +51,16 @@
 
     $countryInfoDecode = json_decode($countryInfoResult, true);
     $countryIsoAlpha3 = $countryInfoDecode['geonames'][0]['isoAlpha3'];
-    
+
     $output['CountryInfo'] = $countryInfoDecode;
 
     /*Currently, this api converts the SEARCHED country currency against USD.*/
-    $currencyInfoURL = 'https://openexchangerates.org/api/latest.json?app_id=8a4a1acc06324d2c85810578f283d2ad&symbols=' . $countryInfoDecode['geonames'][0]['currencyCode'] . '&prettyprint=false';
+    $currencyInfoURL = '';
+    if($userCurrency != $countryInfoDecode['geonames'][0]['currencyCode']){
+        $currencyInfoURL = 'https://api.exchangerate.host/convert?from=' . $userCurrency . '&to=' . $countryInfoDecode['geonames'][0]['currencyCode'];
+    } else {
+        $currencyInfoURL = 'https://api.exchangerate.host/convert?from=' . $userCurrency . '&symbols=GBP,USD,EUR';
+    }
 
         $ch = curl_init();
 
@@ -68,7 +76,6 @@
         $currencyInfoDecode = json_decode($currencyInfoResult);
 
         $output['CurrencyInfo'] = $currencyInfoDecode;
-
 
 
     /*Gets Weather for the capital city of the selected country using the capital city from Geonames country info */
