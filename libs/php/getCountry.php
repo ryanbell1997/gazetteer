@@ -54,6 +54,25 @@
 
     $output['CountryInfo'] = $countryInfoDecode;
 
+
+    /*Using REST Countries to get the currency Name and language*/
+    $restCountriesUrl = 'https://restcountries.eu/rest/v2/alpha/' . $countryCode;
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $restCountriesUrl);
+
+        $restCountriesResult = curl_exec($ch);
+
+        curl_close($ch);
+
+    $restCountriesDecode =  json_decode($restCountriesResult, true);
+
+    $output['RestCountries'] = $restCountriesDecode;
+
     /*Currently, this api converts the SEARCHED country currency against USD.*/
     $currencyInfoURL = '';
     if($userCurrency != $countryInfoDecode['geonames'][0]['currencyCode']){
@@ -76,7 +95,6 @@
         $currencyInfoDecode = json_decode($currencyInfoResult);
 
         $output['CurrencyInfo'] = $currencyInfoDecode;
-
 
     /*Gets Weather for the capital city of the selected country using the capital city from Geonames country info */
     $weatherUrl = 'http://api.weatherapi.com/v1/forecast.json?key=7198bbffcd0b4151847165019202809&q=' . $countryInfoDecode['geonames'][0]['capital'] . '&days=7';

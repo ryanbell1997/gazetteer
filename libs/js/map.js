@@ -8,9 +8,9 @@ function main(){
     },
     ).addTo(map);
     //Overall Information Button
-    L.easyButton('<span>&#8505</span>', () => {displayGeneralInfo()}).addTo(map);
-    L.easyButton('<span>&starf;</span>', () => {alert('Hello');}).addTo(map);
-    L.easyButton('<span>&starf;</span>', () => {alert('Hello');}).addTo(map);
+    L.easyButton('<span class="icon">&#8505</span>', () => {DisplayGeneralInfo()}).addTo(map);
+    L.easyButton('<span class="icon"><b>$<b></span>', () => {DisplayCurrencyInfo()}).addTo(map);
+    L.easyButton('<span class="icon">&#9729</span>', () => {alert('Hello');}).addTo(map);
     getInitialLocation();
 }
 
@@ -23,6 +23,11 @@ let landMass = 0;
 let exchangeRate = 0;
 let countryGeoJson = [];
 let area = 0;
+let countryCode = '';
+
+let currencyName = '';
+let currencySymbol = ''; 
+
 var geoJsonStyle = {
     "color": "#85e384",
     "opacity": 0.8,
@@ -60,6 +65,8 @@ function getInitialLocation(){
                             }
                             countryCode = result['CountryCode']['countryCode'];
                             area = result['CountryInfo']['geonames'][0]['areaInSqKm']
+                            currencyName = result['RestCountries']['currencies'][0]['name'];
+                            currencySymbol = result['RestCountries']['currencies'][0]['symbol'];
                             countryGeoJson =  result['geoJson'];
                             setLJSON("userCurrency", currency);
                             createGeoJson(countryGeoJson);
@@ -102,6 +109,8 @@ function setCountryInformation(){
                         }
                         countryCode = $('#countryInput').find(':selected').val();
                         area = result['CountryInfo']['geonames'][0]['areaInSqKm'];
+                        currencyName = result['RestCountries']['currencies'][0]['name'];
+                        currencySymbol = result['RestCountries']['currencies'][0]['symbol'];
                         countryGeoJson =  result['geoJson'];
                         createGeoJson(countryGeoJson);
                         geoJsonLayer.bindTooltip(mapInfoDisplay()).toggleTooltip();
@@ -134,40 +143,121 @@ function createGeoJson(geoJson) {
 }
 
 function GeneralInfo() {
-    return `<table>
-    <tbody>
-        <tr>
-            <td>Capital City:</td>
-            <td>${capital}</td>
-        </tr>
+    return `
+    <table id="info">
+        <tbody>
+            <tr>
+                <td id="imageCell" colspan="2"><img class="flagImage" src="https:/www.countryflags.io/${countryCode}/flat/64.png"></td>
+            </tr>
 
-        <tr>
-            <td>Continent:</td>
-            <td>${region}</td>
-        </tr>
+            <tr>
+                <td class="key">Capital City:</td>
+                <td class="value">${capital}</td>
+            </tr>
 
-        <tr>
-            <td>Population:</td>
-            <td>${population}</td>
-        </tr>
+            <tr>
+                <td class="key">Continent:</td>
+                <td class="value">${region}</td>
+            </tr>
 
-        <tr>
-            <td>Area</td>
-            <td>${area}km<sup>2</sup></td>
-        </tr>
-    </tbody>
+            <tr>
+                <td class="key">Population:</td>
+                <td class="value">${population}</td>
+            </tr>
+
+            <tr>
+                <td class="key">Area</td>
+                <td class="value">${area}km<sup>2</sup></td>
+            </tr>
+        </tbody>
     </table>
     `
 }
 
+function CurrencyInfo() {
+    return `
+    <table id="info">
+        <tbody>
+            <tr>
+                <td id="imageCell" colspan="2"><img class="flagImage" src="https:/www.countryflags.io/${countryCode}/flat/64.png"></td>
+            </tr>
+
+            <tr>
+                <td class="key">Currency Name:</td>
+                <td class="value">${currencyName}</td>
+            <tr>
+
+            <tr>
+                <td class="key">Currency Symbol:</td>
+                <td class="value">${currencySymbol}</td>
+            <tr>
+
+            <tr>
+                <td class="key">Currency Code:</td>
+                <td class="value">${currency}</td>
+            <tr>
+
+            <tr>
+                <td class="key">Current Exchange Rate:</td>
+                <td class="value">${exchangeRate}</td>
+            <tr>
+        </tbody>
+    </table>
+
+    <canvas id="myChart"></canvas>
+    `
+}
+
 function mapInfoDisplay(){
-    return `<b>${countryName}</b><br>
-    Capital City: ${capital}<br>
-    Continent: ${region}<br>
-    Population: ${population}<br>
-    Currency: ${currency}<br>
-    Exchange Rate: ${exchangeRate}<br>
-    <a href="#">See more info</a>`
+    return `
+    <table id="mapInfo">
+        <tbody>
+            <tr>
+                <td id="imageCell"><img class="flagImage" src="https:/www.countryflags.io/${countryCode}/flat/64.png"></td>
+                <td class="titleCell"><b>${countryName}</b></td>
+            </tr>
+
+            <tr>
+                <td class="key">Capital City:</td>
+                <td class="value">${capital}</td>
+            </tr>
+
+            <tr>
+                <td class="key">Continent:</td>
+                <td class="value">${region}</td>
+            </tr>
+
+            <tr>
+                <td class="key">Population:</td>
+                <td class="value">${population}</td>
+            </tr>
+
+            <tr>
+                <td class="key">Currency:</td>
+                <td class="value">${currencyName}</td>
+            </tr>
+
+            <tr>
+                <td class="key">Exchange Rate:</td>
+                <td class="value">${exchangeRate}</td>
+            </tr>
+        </tbody>
+    </table>
+`
+}
+
+function DisplayGeneralInfo(){
+    $('.modal-title').html(`</b>${countryName}</b>`);
+    $('.modal-body').html(GeneralInfo());
+    map.closeTooltip();
+    $('.modal').show();
+}
+
+function DisplayCurrencyInfo(){
+    $('.modal-title').html(`</b>${countryName}</b>`);
+    $('.modal-body').html(CurrencyInfo());
+    map.closeTooltip();
+    $('.modal').show()
 }
 
 //Event Listeners
@@ -175,18 +265,12 @@ $('#countryInput').on('change', () => {
     setCountryInformation();
 })
 
-function displayGeneralInfo(){
-    $('.modal-title').html(`</b>${countryName}</b>`);
-    $('.modal-body').html(GeneralInfo());
-    $('.modal').toggle();
-}
-
 $('.close').on('click', () => {
-    $('.modal').toggle();
+    $('.modal').hide();
 })
 
 $('.btn').on('click', () => {
-   $('.modal').toggle();
+   $('.modal').hide();
 })
 
 
