@@ -24,6 +24,9 @@ let exchangeRate = 0;
 let countryGeoJson = [];
 let area = 0;
 let countryCode = '';
+let countryFlagLink = '';
+let languages = [];
+
 
 let currencyName = '';
 let currencySymbol = ''; 
@@ -67,7 +70,13 @@ function getInitialLocation(){
                             area = result['CountryInfo']['geonames'][0]['areaInSqKm']
                             currencyName = result['RestCountries']['currencies'][0]['name'];
                             currencySymbol = result['RestCountries']['currencies'][0]['symbol'];
+                            countryFlagLink = result['RestCountries']['flag'];
                             countryGeoJson =  result['geoJson'];
+                            
+                            for(language in result['RestCountries']['languages']){
+                                languages.push(language['name']);
+                            }
+
                             setLJSON("userCurrency", currency);
                             createGeoJson(countryGeoJson);
                             geoJsonLayer.bindTooltip(mapInfoDisplay()).toggleTooltip();
@@ -111,7 +120,15 @@ function setCountryInformation(){
                         area = result['CountryInfo']['geonames'][0]['areaInSqKm'];
                         currencyName = result['RestCountries']['currencies'][0]['name'];
                         currencySymbol = result['RestCountries']['currencies'][0]['symbol'];
+                        countryFlagLink = result['RestCountries']['flag'];
                         countryGeoJson =  result['geoJson'];
+
+                        for(let i = 0; i <= results['RestCountries']['languages'].length; i++){
+                            languages.push(result['RestCountries']['languages'][i]['name']);
+                        }
+
+                        RestCountries.languages[0].name
+
                         createGeoJson(countryGeoJson);
                         geoJsonLayer.bindTooltip(mapInfoDisplay()).toggleTooltip();
 
@@ -143,11 +160,12 @@ function createGeoJson(geoJson) {
 }
 
 function GeneralInfo() {
+    console.log(languages);
     return `
     <table id="info">
         <tbody>
             <tr>
-                <td id="imageCell" colspan="2"><img class="flagImage" src="https:/www.countryflags.io/${countryCode}/flat/64.png"></td>
+                <td id="imageCell" colspan="2"><img class="flagImage" src="${countryFlagLink}"></td>
             </tr>
 
             <tr>
@@ -169,6 +187,12 @@ function GeneralInfo() {
                 <td class="key">Area</td>
                 <td class="value">${area}km<sup>2</sup></td>
             </tr>
+
+            <tr>
+                <td class="key">Languages</td>
+                <td class="value">${languages}</td>
+            </tr>
+
         </tbody>
     </table>
     `
@@ -179,7 +203,7 @@ function CurrencyInfo() {
     <table id="info">
         <tbody>
             <tr>
-                <td id="imageCell" colspan="2"><img class="flagImage" src="https:/www.countryflags.io/${countryCode}/flat/64.png"></td>
+                <td id="imageCell" colspan="2"><img class="flagImage" src="${countryFlagLink}"></td>
             </tr>
 
             <tr>
@@ -213,7 +237,7 @@ function mapInfoDisplay(){
     <table id="mapInfo">
         <tbody>
             <tr>
-                <td id="imageCell"><img class="flagImage" src="https:/www.countryflags.io/${countryCode}/flat/64.png"></td>
+                <td id="imageCell"><img class="flagImage" src="${countryFlagLink}"></td>
                 <td class="titleCell"><b>${countryName}</b></td>
             </tr>
 

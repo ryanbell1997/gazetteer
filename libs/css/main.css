@@ -68,6 +68,7 @@ body {
     width: 90%;
     margin: 0.5em auto;
     font-size: 85%;
+    padding-top: 1rem;
 }
 
 #info .key {
@@ -89,9 +90,18 @@ body {
 
 #info .flagImage {
     display: block;
-    width: 28%;
+    width: 75%;
     height: auto;
     margin: 0px auto;
+}
+
+.titleCell {
+    font-size: 125%;
+}
+
+#mapInfo .flagImage {
+    width: 90%;
+    height: auto;
 }
 
 #mapInfo .key{
@@ -100,6 +110,6 @@ body {
     padding-right: 0.3em;
 }
 
-.titleCell {
-    font-size: 125%;
+#mapInfo .key .value {
+    padding-top: 0.3em;
 }
