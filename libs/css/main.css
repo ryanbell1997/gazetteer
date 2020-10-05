@@ -63,6 +63,10 @@ body {
     text-align: center;
 }
 
+.modal {
+    overflow: scroll;
+}
+
 /*Table formatting*/
 #info {
     width: 90%;
@@ -112,4 +116,37 @@ body {
 
 #mapInfo .key .value {
     padding-top: 0.3em;
+}
+
+#tableTitle {
+    text-align: center;
+    font-size: 1.5em;
+    padding-top: 1em;
+}
+
+#info .weatherIcon {
+    width: 35%;
+    margin: 0px auto;
+    height: auto;
+    display: block;
+}
+
+#info .weatherCondition {
+    text-align: center;
+    font-weight: bold;
+}
+
+#info .weatherTitle {
+    text-align: center;
+}
+
+.moreButton {
+    width: 30%;
+    height: auto;
+    margin: 0px auto;
+    display: block;
+}
+
+#date1Forecast, #date2Forecast, #date3Forecast {
+    display: none;  
 }
