@@ -162,11 +162,12 @@ function setCountryInformation(){
                         currencySymbol = result['RestCountries']['currencies'][0]['symbol'];
                         countryFlagLink = result['RestCountries']['flag'];
                         countryGeoJson =  result['geoJson'];
-
+                        
+                        /*
                         for(let i = 0; i <= result['RestCountries']['languages'].length; i++){
                             languages.push(result['RestCountries']['languages'][i]['name']);
                         }
-
+                        */
                         //weather var sets
                         setWeatherVars(result);
 
@@ -370,16 +371,15 @@ function WeatherInfo() {
     <table>
         <tbody>
             <tr>
-                <td colspan="2" class="weatherTitle"><b>Forecast for ${countryName}</b></td>
+                <td colspan="4" class="weatherTitle"><b>Forecast for ${countryName}</b></td>
             </tr>
 
             <tr>
                 <td>${weatherDate1}</td>
                 <td>${date1Temp}<span>&#176</span>C</td>
-                <td><img src=${date1Icon}></td>
-                <td><img class="moreButton" id="moreButton1" src="https://img.icons8.com/ios/100/000000/circled-chevron-down.png"/></td>
+                <td><img class="foreCastIcon" src=${date1Icon}></td>
+                <td id="moreButton1"><img class="moreButton" src="https://img.icons8.com/ios/100/000000/circled-chevron-down.png"/></td>
             </tr>
-
 
                 <tr id="date1Forecast">
                     <td>    
@@ -418,8 +418,8 @@ function WeatherInfo() {
             <tr>
                 <td>${weatherDate2}</td>
                 <td>${date2Temp}<span>&#176</span>C</td>
-                <td><img src=${date2Icon}></td>
-                <td><img class="moreButton" id="moreButton2" src="https://img.icons8.com/ios/100/000000/circled-chevron-down.png"/></td>
+                <td><img class="foreCastIcon" src=${date2Icon}></td>
+                <td id="moreButton2"><img class="moreButton"  src="https://img.icons8.com/ios/100/000000/circled-chevron-down.png"/></td>
             </tr>
 
 
@@ -459,8 +459,8 @@ function WeatherInfo() {
             <tr>
                 <td>${weatherDate3}</td>
                 <td>${date3Temp}<span>&#176</span>C</td>
-                <td><img src=${date3Icon}></td>
-                <td><img class="moreButton" id="moreButton3" src="https://img.icons8.com/ios/100/000000/circled-chevron-down.png"/></td>
+                <td><img class="foreCastIcon" src=${date3Icon}></td>
+                <td id="moreButton3"><img class="moreButton" src="https://img.icons8.com/ios/100/000000/circled-chevron-down.png"/></td>
             </tr>
                 <tr id="date3Forecast">
                     <td>
@@ -560,29 +560,33 @@ function DisplayWeatherInfo() {
 
 
 //Event Listeners
-$('#countryInput').on('change', () => {
-    setCountryInformation();
-})
 
-$('.close').on('click', () => {
-    $('.modal').hide();
-})
-
-$('.btn').on('click', () => {
-   $('.modal').hide();
-})
-
-$('#moreButton1').on('click', () => {
-    $('#date1Forecast').slideToggle();
-})
-
-$('#moreButton2').on('click', () => {
-    $('#date2Forecast').slideToggle();
-})
-
-$('#moreButton3').on('click', () => {
-    $('#date3Forecast').slideToggle();
-})
+    $('#countryInput').on('change', () => {
+        setCountryInformation();
+    });
+    
+    $('.close').on('click', () => {
+        $('.modal').hide();
+    });
+    
+    $('.btn').on('click', () => {
+       $('.modal').hide();
+    });
+    
+    $("#moreButton1").click(function() {
+        console.log("clicked");
+        $("#date1Forecast").slideDown();
+    });
+    
+    $("#moreButton2").click(function() {
+        console.log("clicked");
+        $("#date2Forecast").slideToggle();
+    });
+    
+    $("#moreButton3").click(function() {
+        console.log("clicked");
+        $('#date3Forecast').slideToggle();
+    });
 
 
 $(document).ready(() => {

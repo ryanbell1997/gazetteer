@@ -147,6 +147,17 @@ body {
     display: block;
 }
 
+#moreButton1, #moreButton2, #moreButton3 {
+    width: 25%;
+}
+
+.foreCastIcon {
+    display: block;
+    width: 85%;
+    height: auto;
+    margin: 0px auto;
+}
+
 #date1Forecast, #date2Forecast, #date3Forecast {
     display: none;  
 }
