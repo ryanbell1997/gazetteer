@@ -97,8 +97,8 @@
         $output['CurrencyInfo'] = $currencyInfoDecode;
 
     /*Gets Weather for the capital city of the selected country using the capital city from Geonames country info */
-    $weatherUrl = 'http://api.weatherapi.com/v1/forecast.json?key=7198bbffcd0b4151847165019202809&q=' . $countryInfoDecode['geonames'][0]['capital'] . '&days=7';
-
+        $weatherUrl = 'http://api.weatherapi.com/v1/forecast.json?key=7198bbffcd0b4151847165019202809&q=' . $restCountriesDecode['capital'] . '&days=7';
+  
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -115,7 +115,7 @@
         $output['WeatherInfo'] = $weatherForecastDecode;
 
     /*Gets Venue Recomendations using FourSqaure API, based off location*/
-    $venueUrl = 'https://api.foursquare.com/v2/venues/explore?client_id=3ORME23U3ZYMEPSL0MSIUQDHQTRJ5OOIDFMKFTRFRT2MT3A3&client_secret=GWVFCNAITRF2ODKFXCEYG1XH22JQTWHHVW52WE3Z1QKXOSAE&near=' . $countryInfoDecode['geonames'][0]['capital'] . '&section=topPicks&limit=3&v=20210224';
+    $venueUrl = 'https://api.foursquare.com/v2/venues/explore?client_id=3ORME23U3ZYMEPSL0MSIUQDHQTRJ5OOIDFMKFTRFRT2MT3A3&client_secret=GWVFCNAITRF2ODKFXCEYG1XH22JQTWHHVW52WE3Z1QKXOSAE&near=' . $restCountriesDecode['capital'] . '&section=topPicks&limit=3&v=20210224&radius=50000';
     
     $ch = curl_init();
 
@@ -148,6 +148,39 @@
 
     $output['geoJson'] = $countryGeoJson;
 
+    $indicatorUrl = 'http://api.worldbank.org/v2/country/' . $countryCode . '/indicators/NY.GDP.MKTP.CD?date=2019&format=json';
+
+    $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $indicatorUrl);
+
+    $indicatorResult = curl_exec($ch);
+
+    curl_close($ch);
+    
+    $indicatorDecode = json_decode($indicatorResult,true);
+
+    $output['Indicator'] = $indicatorDecode;
+
+    $indicatorGrowthUrl = 'http://api.worldbank.org/v2/country/' . $countryCode . '/indicators/NY.GDP.MKTP.KD.ZG?date=2019&format=json';
+
+    $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $indicatorGrowthUrl);
+
+    $indicatorGrowthResult = curl_exec($ch);
+
+    curl_close($ch);
+    
+    $indicatorGrowthDecode = json_decode($indicatorGrowthResult,true);
+
+    $output['IndicatorGrowth'] = $indicatorGrowthDecode;
 
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";

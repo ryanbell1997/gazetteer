@@ -19,6 +19,10 @@ body {
     body {
         padding-top: 70px;
     }
+
+    .icon {
+        padding-right: 3px;
+    }
 }
 
 #map {
@@ -55,7 +59,8 @@ body {
 }
 
 .icon {
-    font-size: 1.3em;
+    padding-top: 4px;
+    font-size: 1.7em;
 }
 
 .infoLink {
@@ -64,8 +69,19 @@ body {
 }
 
 .modal {
-    overflow: scroll;
+    max-height: 85vh;
+    
 }
+
+.modal-content {
+    background-color: #f6fff2;
+}
+
+.bodyView {
+    overflow-y: scroll;
+    max-height: 65vh;
+}
+
 
 /*Table formatting*/
 #info {
@@ -121,11 +137,10 @@ body {
 #tableTitle {
     text-align: center;
     font-size: 1.5em;
-    padding-top: 1em;
 }
 
 #info .weatherIcon {
-    width: 35%;
+    width: 20%;
     margin: 0px auto;
     height: auto;
     display: block;
@@ -140,6 +155,11 @@ body {
     text-align: center;
 }
 
+.forecastTable {
+    width: 100%;
+}
+
+
 .moreButton {
     width: 30%;
     height: auto;
@@ -148,16 +168,100 @@ body {
 }
 
 #moreButton1, #moreButton2, #moreButton3 {
-    width: 25%;
+    width: 75%;
+}
+
+.forecastIconCell {
+    width: 2.4em;
 }
 
 .foreCastIcon {
     display: block;
-    width: 85%;
+    width: 100%;
     height: auto;
     margin: 0px auto;
 }
 
-#date1Forecast, #date2Forecast, #date3Forecast {
-    display: none;  
+.forecastCell {
+    text-align: center;
+
 }
+
+.forecastButton {
+    width: 2em;
+}
+
+#date1Forecast, #date2Forecast, #date3Forecast {  
+    display: none;
+    overflow: hidden;
+}
+
+#loading {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: block;
+    opacity: 0.7;
+    background-color: #fff;
+    z-index: 99;
+    text-align: center;
+  }
+  
+  #loading-image {
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    z-index: 100;
+  }
+
+  .currentKey {
+    text-align: center;
+    padding-bottom: 0.5em;
+  }
+
+  .currentValue {
+    text-align: center;
+  }
+
+  .currentSpace {
+      padding-top: 0.6em;
+  }
+
+  .rain {
+    color: #4f8ae8;
+  }
+
+  .thermometer {
+    color: #ed6053;
+  }
+
+  .wind {
+    color: #696969;
+  }
+
+  .cloud {
+    color: #949494;
+  }
+
+  .linkCell {
+      text-align: center;
+  }
+
+
+  /*Venue Styles */
+  .venueTitle {
+      font-weight: bold;
+      text-align: center;
+      font-size: 120%;
+      padding-bottom: 0.5em;
+  }
+
+  .venueAddressHeader {
+      font-weight: 500;
+  }
+
+  .venueLinks {
+      padding-bottom: 1em;
+  }

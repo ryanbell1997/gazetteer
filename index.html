@@ -15,6 +15,8 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
     <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/57c17bb582.js" crossorigin="anonymous"></script>
     <!-- Custom styles for this template -->
     <link href="libs/css/main.css" rel="stylesheet" type="text/css">
     
@@ -23,7 +25,7 @@
 
     <nav class="navbar navbar-expand-md navbar-dark fixed-top" id="navBar">
       <header id="titleH">
-        <h1 >Gazetteer</h1>
+        <h1>Gazetteer</h1>
       </header>
         <form class="form-inline my-2 my-lg-0 form-float" id="form">
           <select class="form-control mr-sm-2" type="text" placeholder="Search for a country" aria-label="Search" id="countryInput" name="countryInput" placeholder="Select A Country">
@@ -59,16 +61,15 @@
             <option value="CH">Switzerland</option>
             <option value="CL">Chile</option>
             <option value="CN">China</option>
-            <option value="CI">Ivory Coast</option>
             <option value="CM">Cameroon</option>
             <option value="CD">Democratic Republic of the Congo</option>
             <option value="CO">Colombia</option>
             <option value="CR">Costa Rica</option>
+            <option value="HR">Croatia</option>
             <option value="CU">Cuba</option>
             <option value="CY">Northern Cyprus</option>
             <option value="CY">Cyprus</option>
             <option value="CZ">Czech Republic</option>
-            <option value="DE">Germany</option>
             <option value="DJ">Djibouti</option>
             <option value="DK">Denmark</option>
             <option value="DO">Dominican Republic</option>
@@ -76,16 +77,16 @@
             <option value="EC">Ecuador</option>
             <option value="EG">Egypt</option>
             <option value="ER">Eritrea</option>
-            <option value="ES">Spain</option>
             <option value="EE">Estonia</option>
             <option value="ET">Ethiopia</option>
             <option value="FI">Finland</option>
             <option value="FJ">Fiji</option>
             <option value="FK">Falkland Islands</option>
             <option value="FR">France</option>
+            <option value="GF">French Guiana</option>
             <option value="GA">Gabon</option>
-            <option value="GB">United Kingdom</option>
             <option value="GE">Georgia</option>
+            <option value="DE">Germany</option>
             <option value="GH">Ghana</option>
             <option value="GN">Guinea</option>
             <option value="GM">Gambia</option>
@@ -94,10 +95,8 @@
             <option value="GR">Greece</option>
             <option value="GL">Greenland</option>
             <option value="GT">Guatemala</option>
-            <option value="GF">French Guiana</option>
             <option value="GY">Guyana</option>
             <option value="HN">Honduras</option>
-            <option value="HR">Croatia</option>
             <option value="HT">Haiti</option>
             <option value="HU">Hungary</option>
             <option value="ID">Indonesia</option>
@@ -108,6 +107,7 @@
             <option value="IS">Iceland</option>
             <option value="IL">Israel</option>
             <option value="IT">Italy</option>
+            <option value="CI">Ivory Coast</option>
             <option value="JM">Jamaica</option>
             <option value="JO">Jordan</option>
             <option value="JP">Japan</option>
@@ -173,6 +173,7 @@
             <option value="SB">Solomon Islands</option>
             <option value="SL">Sierra Leone</option>S
             <option value="SV">El Salvador</option>
+            <option value="ES">Spain</option>
             <option value="SO">Somalia</option>
             <option value="RS">Republic of Serbia</option>
             <option value="SR">Suriname</option>
@@ -196,6 +197,7 @@
             <option value="UA">Ukraine</option>
             <option value="UY">Uruguay</option>
             <option value="US">United States of America</option>
+            <option value="GB">United Kingdom</option>
             <option value="UZ">Uzbekistan</option>
             <option value="VE">Venezuela</option>
             <option value="VN">Vietnam</option>
@@ -209,6 +211,10 @@
     </form>
 </nav>
 
+<div id="loading">
+  <img id="loading-image" src="libs/images/ajax-loader.gif" alt="Loading..." />
+</div>
+
 <div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -218,7 +224,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body bodyView">
        
       </div>
       <div class="modal-footer">
