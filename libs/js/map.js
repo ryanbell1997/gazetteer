@@ -80,7 +80,13 @@ let venueLatLngs = [];
 let venueLinks = [];
 let venueAddresses = [];
 
+var venueMarker = L.ExtraMarkers.icon({
+    icon: 'fa-theater-masks',
+    color: 'red',
+    shape: 'star',
+    prefix: 'fa'
 
+});
 
 var geoJsonStyle = {
     "color": "#85e384",
@@ -318,7 +324,7 @@ function setVenueVars(resultJson) {
 
 function addVenueMarkers() {
     for(let i = 0; i < venueLatLngs.length; i++){
-        L.marker([venueLatLngs[i][0], venueLatLngs[i][1]]).bindTooltip(VenueInfoDisplay(i), { }).addTo(map);
+        L.marker([venueLatLngs[i][0], venueLatLngs[i][1]], {icon: venueMarker}).bindTooltip(VenueInfoDisplay(i), { }).addTo(map);
     }
 }
 
