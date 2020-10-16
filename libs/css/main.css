@@ -4,6 +4,10 @@ html, body, #container {
     overflow: hidden;
 }
 
+#container {
+    z-index: 10;
+}
+
 h1 {
     color: #ffffff;
     font-size: 1.7em;
@@ -205,7 +209,7 @@ body {
     display: block;
     opacity: 0.7;
     background-color: #fff;
-    z-index: 99;
+    z-index: 99!important;
     text-align: center;
   }
   
@@ -213,7 +217,7 @@ body {
     position: absolute;
     top: 50%;
     bottom: 50%;
-    z-index: 100;
+    z-index: 99;
   }
 
   .currentKey {

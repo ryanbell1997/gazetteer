@@ -33,10 +33,28 @@
     } else {
         $countryCode = $_REQUEST['countryCode'];
     }
-    
 
+    /*Using REST Countries to get the currency Name and language*/
+    $restCountriesUrl = 'https://restcountries.eu/rest/v2/alpha/' . $countryCode;
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $restCountriesUrl);
+
+        $restCountriesResult = curl_exec($ch);
+
+        curl_close($ch);
+
+    $restCountriesDecode =  json_decode($restCountriesResult, true);
+    $countryIsoAlpha2 = $restCountriesDecode['alpha2Code'];
+
+    $output['RestCountries'] = $restCountriesDecode;
+    
     /*Gets country info from Geonames using country code*/
-    $countryInfoUrl = 'http://api.geonames.org/countryInfoJSON?country=' . $countryCode . '&username=ryan.bell1997';
+    $countryInfoUrl = 'http://api.geonames.org/countryInfoJSON?country=' . $countryIsoAlpha2 . '&username=ryan.bell1997';
 
         $ch = curl_init();
 
@@ -55,23 +73,7 @@
     $output['CountryInfo'] = $countryInfoDecode;
 
 
-    /*Using REST Countries to get the currency Name and language*/
-    $restCountriesUrl = 'https://restcountries.eu/rest/v2/alpha/' . $countryCode;
 
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $restCountriesUrl);
-
-        $restCountriesResult = curl_exec($ch);
-
-        curl_close($ch);
-
-    $restCountriesDecode =  json_decode($restCountriesResult, true);
-
-    $output['RestCountries'] = $restCountriesDecode;
 
     /*Currently, this api converts the SEARCHED country currency against USD.*/
     $currencyInfoURL = '';
@@ -148,7 +150,7 @@
 
     $output['geoJson'] = $countryGeoJson;
 
-    $indicatorUrl = 'http://api.worldbank.org/v2/country/' . $countryCode . '/indicators/NY.GDP.MKTP.CD?date=2019&format=json';
+    $indicatorUrl = 'http://api.worldbank.org/v2/country/' . $countryIsoAlpha2 . '/indicators/NY.GDP.MKTP.CD?date=2019&format=json';
 
     $ch = curl_init();
 
@@ -165,7 +167,7 @@
 
     $output['Indicator'] = $indicatorDecode;
 
-    $indicatorGrowthUrl = 'http://api.worldbank.org/v2/country/' . $countryCode . '/indicators/NY.GDP.MKTP.KD.ZG?date=2019&format=json';
+    $indicatorGrowthUrl = 'http://api.worldbank.org/v2/country/' . $countryIsoAlpha2 . '/indicators/NY.GDP.MKTP.KD.ZG?date=2019&format=json';
 
     $ch = curl_init();
 

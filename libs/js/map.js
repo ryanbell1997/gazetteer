@@ -12,6 +12,7 @@ function main(){
     L.easyButton('<i class="material-icons icon">attach_money</i>', () => {DisplayCurrencyInfo()}).addTo(map);
     L.easyButton('<i class="material-icons icon">wb_sunny</i>', () => {DisplayWeatherInfo()}).addTo(map);
     L.easyButton('<i class="material-icons icon">confirmation_number</i>', () => {DisplayVenueInfo()}).addTo(map);
+    getCountryList();
     getInitialLocation();
 }
 
@@ -175,10 +176,7 @@ function setCountryInformation(){
                     currency: getLJSON("userCurrency")
                 },
                 success: (result) => {
-                    
-
                     console.log(result);
-
                     if(result.status.name == "ok"){
                         countryName = result['CountryInfo']['geonames'][0]['countryName'];
                         population = result['CountryInfo']['geonames'][0]['population'];
@@ -208,8 +206,18 @@ function setCountryInformation(){
                             languages.push(result['RestCountries']['languages'][i]['name']);
                         }
 
-                        gdpInfo = result['Indicator'][1][0]['value'];
-                        gdpGrowthInfo = result['IndicatorGrowth'][1][0]['value'];
+                        if(result['Indicator'].length > 1){
+                            gdpInfo = result['Indicator'][1][0]['value'];
+                        } else {
+                            gdpInfo = null;
+                        }
+
+                        if(result['IndicatorGrowth'].length > 1){
+                            gdpGrowthInfo = result['IndicatorGrowth'][1][0]['value'];
+                        } else {
+                            gdpGrowthInfo = null;
+                        }
+                        
                         //weather var sets
                         setWeatherVars(result);
                         setVenueVars(result);
@@ -228,8 +236,65 @@ function setCountryInformation(){
             });
         };
 
+function getCountryList(){
+    $.ajax({
+        url: 'libs/php/countryList.php',
+        type: 'POST',
+        dataType: 'JSON',
+    success: (result) => {
+
+        const selectElement = $('#countryInput');
+
+        result['data'].forEach(country => {
+            selectElement.append(`<option value=${country['code']}>${country['name']}</option>`)
+        });
+    }, error: (jqXHR, textStatus, errorThrown) => {
+        console.warn(jqXHR.responseText)
+        console.log(errorThrown);
+        $('#loading').hide();
+    }
+})
+}
+
 function setWeatherVars(resultJson) {
-    if(resultJson['WeatherInfo'] != null){
+    if(resultJson['WeatherInfo'] == null || resultJson['WeatherInfo']['error']){
+        currentWeatherIcon =  "N/A";
+        currentConditions = "N/A";
+        currentTemp = "N/A";
+        currentHumidity = "N/A";
+        currentPrecip =  "N/A";
+        currentGust = "N/A";
+        currentCloud = "N/A";
+        
+        //date1
+        weatherDate1 =  "N/A";
+        date1Conditions = "N/A";
+        date1Icon =  "N/A";
+        date1Temp = "N/A";
+        date1Wind = "N/A";
+        date1Humidity = "N/A";
+        date1Precip = "N/A";
+    
+        //date2
+        weatherDate2 =  "N/A";
+        date2Conditions = "N/A";
+        date2Icon =  "N/A";
+        date2Temp = "N/A";
+        date2Wind = "N/A";
+        date2Humidity = "N/A";
+        date2Precip = "N/A";
+    
+        //date 3
+        weatherDate3 =  "N/A";
+        date3Conditions = "N/A";
+        date3Icon =  "N/A";
+        date3Temp = "N/A";
+        date3Wind = "N/A";
+        date3Humidity = "N/A";
+        date3Precip = "N/A";
+        return;
+    }
+
     currentWeatherIcon =  resultJson['WeatherInfo']['current']['condition']['icon'];
     currentConditions = resultJson['WeatherInfo']['current']['condition']['text'];
     currentTemp = resultJson['WeatherInfo']['current']['feelslike_c'];
@@ -263,47 +328,14 @@ function setWeatherVars(resultJson) {
     date3Temp = resultJson['WeatherInfo']['forecast']['forecastday'][2]['day']['avgtemp_c'];
     date3Wind = resultJson['WeatherInfo']['forecast']['forecastday'][2]['day']['maxwind_mph'];
     date3Humidity = resultJson['WeatherInfo']['forecast']['forecastday'][2]['day']['avghumidity'];
-    date3Precip = resultJson['WeatherInfo']['forecast']['forecastday'][2]['day']['totalprecip_mm'];
-    } else {
-    currentWeatherIcon =  "N/A";
-    currentConditions = "N/A";
-    currentTemp = "N/A";
-    currentHumidity = "N/A";
-    currentPrecip =  "N/A";
-    currentGust = "N/A";
-    currentCloud = "N/A";
-    
-    //date1
-    weatherDate1 =  "N/A";
-    date1Conditions = "N/A";
-    date1Icon =  "N/A";
-    date1Temp = "N/A";
-    date1Wind = "N/A";
-    date1Humidity = "N/A";
-    date1Precip = "N/A";
-
-    //date2
-    weatherDate2 =  "N/A";
-    date2Conditions = "N/A";
-    date2Icon =  "N/A";
-    date2Temp = "N/A";
-    date2Wind = "N/A";
-    date2Humidity = "N/A";
-    date2Precip = "N/A";
-
-    //date 3
-    weatherDate3 =  "N/A";
-    date3Conditions = "N/A";
-    date3Icon =  "N/A";
-    date3Temp = "N/A";
-    date3Wind = "N/A";
-    date3Humidity = "N/A";
-    date3Precip = "N/A";
-    }
-    
+    date3Precip = resultJson['WeatherInfo']['forecast']['forecastday'][2]['day']['totalprecip_mm'];    
 }
 
 function setVenueVars(resultJson) {
+    if(resultJson['Venues'] == null || resultJson['Venues']['meta']['code'] != 200){
+        return;
+    }
+
     venueNames = [];
     venueLatLngs = [];
     venueLinks = [];
@@ -324,7 +356,7 @@ function setVenueVars(resultJson) {
 
 function addVenueMarkers() {
     for(let i = 0; i < venueLatLngs.length; i++){
-        L.marker([venueLatLngs[i][0], venueLatLngs[i][1]], {icon: venueMarker}).bindTooltip(VenueInfoDisplay(i), { }).addTo(map);
+        L.marker([venueLatLngs[i][0], venueLatLngs[i][1]], {icon: venueMarker}).bindTooltip(VenueInfoDisplay(i), {maxWidth: "50%"}).addTo(map);
     }
 }
 
@@ -371,7 +403,6 @@ function VenueInfo(){
                 <tr>
                     <td class="venueLinks"><a href="${venueLinks[i]}" target="_blank">Click here for more info</a></td>
                 </tr>
-                <br>
             `
         }
     }
@@ -790,5 +821,3 @@ function DisplayVenueInfo() {
 $(document).ready(() => {
     main();
 });
-
-//TODO Sort out jquery buttons so that the forecast slides down when you press it! Currently not receiving any input.
