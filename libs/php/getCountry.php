@@ -10,7 +10,7 @@
 
     /*Gets Country Code using GeoNames */
     if(isset($_REQUEST['lat']) && isset($_REQUEST['lng'])){
-        $countryCodeUrl = 'api.geonames.org/countryCodeJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=ryan.bell1997';
+        $countryCodeUrl = 'api.geonames.org/countryCodeJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=';
 
         $ch = curl_init();
 
@@ -54,7 +54,7 @@
     $output['RestCountries'] = $restCountriesDecode;
     
     /*Gets country info from Geonames using country code*/
-    $countryInfoUrl = 'http://api.geonames.org/countryInfoJSON?country=' . $countryIsoAlpha2 . '&username=ryan.bell1997';
+    $countryInfoUrl = 'http://api.geonames.org/countryInfoJSON?country=' . $countryIsoAlpha2 . '&username=';
 
         $ch = curl_init();
 
@@ -99,7 +99,7 @@
         $output['CurrencyInfo'] = $currencyInfoDecode;
 
     /*Gets Weather for the capital city of the selected country using the capital city from Geonames country info */
-        $weatherUrl = 'http://api.weatherapi.com/v1/forecast.json?key=7198bbffcd0b4151847165019202809&q=' . $restCountriesDecode['capital'] . '&days=7';
+        $weatherUrl = 'http://api.weatherapi.com/v1/forecast.json?key=&q=' . $restCountriesDecode['capital'] . '&days=7';
   
         $ch = curl_init();
 
@@ -117,7 +117,7 @@
         $output['WeatherInfo'] = $weatherForecastDecode;
 
     /*Gets Venue Recomendations using FourSqaure API, based off location*/
-    $venueUrl = 'https://api.foursquare.com/v2/venues/explore?client_id=3ORME23U3ZYMEPSL0MSIUQDHQTRJ5OOIDFMKFTRFRT2MT3A3&client_secret=GWVFCNAITRF2ODKFXCEYG1XH22JQTWHHVW52WE3Z1QKXOSAE&near=' . $restCountriesDecode['capital'] . '&section=topPicks&limit=3&v=20210224&radius=50000';
+    $venueUrl = 'https://api.foursquare.com/v2/venues/explore?client_id=near=' . $restCountriesDecode['capital'] . '&section=topPicks&limit=3&v=20210224&radius=50000';
     
     $ch = curl_init();
 
